@@ -56,7 +56,7 @@ fun AboutScreen() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.aboutev),
+                painter = painterResource(id = R.drawable.unicharge_logo),
                 contentDescription = "UniCharge Logo",
                 modifier = Modifier.size(110.dp)
             )
@@ -70,7 +70,7 @@ fun AboutScreen() {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "v9.5.7",
+                "v1.0.0",
                 fontSize = 16.sp,
                 fontWeight = typography.bodyMedium.fontWeight,
                 color = colors.onBackground

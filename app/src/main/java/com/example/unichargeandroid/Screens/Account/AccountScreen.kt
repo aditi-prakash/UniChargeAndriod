@@ -96,7 +96,7 @@ fun AccountScreen(navController: NavController) {
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { navController.navigate(Routes.EditProfileScreen) }) {
                             Icon(
                                 Icons.Default.Edit,
                                 contentDescription = "Edit Profile",
@@ -108,25 +108,45 @@ fun AccountScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                AccountItem(iconRes = R.drawable.history, title = "History", null)
-                AccountItem(iconRes = R.drawable.payment_methods, title = "Payment Methods", null)
+                AccountItem(
+                    iconRes = R.drawable.history,
+                    title = "History",
+                    null,
+                    onClick = { navController.navigate(Routes.HistoryScreen) }
+                )
+                AccountItem(
+                    iconRes = R.drawable.payment_methods, title = "Payment Methods", null,
+                    onClick = { navController.navigate(Routes.AboutScreen) }
+                )
 
                 HorizontalDivider(
                     Modifier.padding(vertical = 12.dp),
                     color = colors.outlineVariant
                 )
 
-                AccountItem(iconRes = R.drawable.personal_info, title = "Personal Info", null)
-                AccountItem(iconRes = R.drawable.security, title = "Security", null)
+                AccountItem(
+                    iconRes = R.drawable.personal_info,
+                    title = "Personal Info",
+                    null,
+                    onClick = { navController.navigate(Routes.AboutScreen) }
+                )
+                AccountItem(
+                    iconRes = R.drawable.security,
+                    title = "Security",
+                    null,
+                    onClick = { navController.navigate(Routes.SecurityScreen) }
+                )
                 AccountItemRightText(
                     iconRes = R.drawable.language,
                     title = "Language",
-                    value = "English (US)"
+                    value = "English (US)",
+                    onClick = { navController.navigate(Routes.LanguageScreen) }
                 )
                 AccountItemRightText(
                     iconRes = R.drawable.dark_mode,
                     title = "Theme",
-                    value = "Auto"
+                    value = "Auto",
+                    onClick = { navController.navigate(Routes.ThemeScreen) }
                 )
 
                 HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
@@ -134,14 +154,21 @@ fun AccountScreen(navController: NavController) {
                 AccountItem(
                     iconRes = R.drawable.help,
                     title = "Help Center",
-                    MaterialTheme.colorScheme.onBackground
+                    MaterialTheme.colorScheme.onBackground,
+                    onClick = { navController.navigate(Routes.HelpCenterScreen) }
                 )
                 AccountItem(
                     iconRes = R.drawable.privacy_policy,
                     title = "Privacy Policy",
-                    MaterialTheme.colorScheme.onBackground
+                    MaterialTheme.colorScheme.onBackground,
+                    onClick = { navController.navigate(Routes.PrivacyPolicyScreen) }
                 )
-                AccountItem(iconRes = R.drawable.aboutev, title = "About UniCharge", null)
+                AccountItem(
+                    iconRes = R.drawable.unicharge_logo_rounded,
+                    title = "About UniCharge",
+                    null,
+                    onClick = { navController.navigate(Routes.AboutScreen) }
+                )
 
                 HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
 
@@ -180,7 +207,8 @@ fun AccountScreen(navController: NavController) {
 fun AccountItem(
     iconRes: Int,
     title: String,
-    iconTint: Color? = MaterialTheme.colorScheme.onBackground
+    iconTint: Color? = MaterialTheme.colorScheme.onBackground,
+    onClick: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -191,7 +219,7 @@ fun AccountItem(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = {}
+                onClick = onClick
             )
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -222,7 +250,8 @@ fun AccountItem(
 fun AccountItemRightText(
     iconRes: Int,
     title: String,
-    value: String
+    value: String,
+    onClick: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -233,7 +262,7 @@ fun AccountItemRightText(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = {}
+                onClick = onClick
             )
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically

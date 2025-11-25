@@ -105,11 +105,3 @@ fun SecurityToggleRow(label: String, checked: Boolean, onToggle: (Boolean) -> Un
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSecurityScreenMTU() {
-    MaterialTheme {
-        SecurityScreen()
-    }
-}

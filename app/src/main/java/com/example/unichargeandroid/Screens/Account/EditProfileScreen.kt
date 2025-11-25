@@ -168,11 +168,3 @@ fun UnderlineText(value: String, placeholder: String, modifier: Modifier = Modif
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPersonalInfoScreenUI() {
-    MaterialTheme {
-        EditProfileScreen()
-    }
-}

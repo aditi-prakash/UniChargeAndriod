@@ -1,6 +1,7 @@
 package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,15 +36,6 @@ fun ThemeScreen() {
 
         Spacer(Modifier.height(20.dp))
 
-        // Suggested label
-        Text(
-            "Suggested",
-            style = typography.bodyMedium,
-            color = colors.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(16.dp))
-
         // Options
         ThemeRowItem(
             text = "Auto",
@@ -76,7 +68,10 @@ fun ThemeRowItem(text: String, selected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) { onClick() }
             .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

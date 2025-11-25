@@ -3,6 +3,7 @@ package com.example.unichargeandroid.Screens.Account
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,9 +12,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,7 +100,32 @@ fun ContactUsScreen() {
 }
 
 @Composable
-fun ContactItem(title: String, iconRes: Int) {
+fun ContactUsSection() {
+
+    ContactItem("Contact us", R.drawable.contact, MaterialTheme.colorScheme.onBackground)
+    Spacer(Modifier.height(12.dp))
+
+    ContactItem("WhatsApp", R.drawable.whatsapp, null)
+    Spacer(Modifier.height(12.dp))
+
+    ContactItem("Instagram", R.drawable.instagram, null)
+    Spacer(Modifier.height(12.dp))
+
+    ContactItem("Facebook", R.drawable.facebook, null)
+    Spacer(Modifier.height(12.dp))
+
+    ContactItem("Twitter", R.drawable.twitter, null)
+    Spacer(Modifier.height(12.dp))
+
+    ContactItem("Website", R.drawable.website, MaterialTheme.colorScheme.onBackground)
+}
+
+
+@Composable
+fun ContactItem(
+    title: String, iconRes: Int,
+    iconTint: Color? = MaterialTheme.colorScheme.onBackground,
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -107,13 +136,17 @@ fun ContactItem(title: String, iconRes: Int) {
             .clip(RoundedCornerShape(14.dp)) // slightly smaller radius
             .background(colors.surface)
             .padding(horizontal = 16.dp)
-            .clickable { },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+            ) { },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = title,
-            modifier = Modifier.size(24.dp) // slightly smaller icon
+            modifier = Modifier.size(24.dp), // slightly smaller icon
+            colorFilter = iconTint?.let { ColorFilter.tint(it) }
         )
 
         Spacer(Modifier.width(14.dp))
