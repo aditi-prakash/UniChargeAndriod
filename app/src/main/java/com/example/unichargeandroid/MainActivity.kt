@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.unichargeandroid.Screens.AddVehicle.AddVehicleScreen
+import com.example.unichargeandroid.Screens.Vehicle.AddVehicleScreen
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 
 class MainActivity : ComponentActivity() {

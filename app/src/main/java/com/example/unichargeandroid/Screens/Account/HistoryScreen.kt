@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.Wallet
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,15 +17,15 @@ import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 
 @Composable
-fun RecentTransactionsScreenScrollable() {
+fun HistoryScreen() {
 
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState) // <-- scrollable
             .background(MaterialTheme.colorScheme.surface)
+            .verticalScroll(scrollState) // make scrollable
             .padding(top = 50.dp, start = 22.dp, end = 22.dp)
     ) {
 
@@ -44,7 +44,7 @@ fun RecentTransactionsScreenScrollable() {
             Spacer(modifier = Modifier.width(4.dp))
 
             Text(
-                text = "Recent Transactions",
+                text = "History",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -53,26 +53,26 @@ fun RecentTransactionsScreenScrollable() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Center message — NO TRANSACTIONS YET
-        Box(
+        // Example future history items (currently empty)
+        Column(
             modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)
         ) {
-            Text(
-                text = "No transactions yet",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
+            // Placeholder for future history items
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp), // Placeholder height
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No history yet",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RecentTransactionsScreenScrollablePreview() {
-    UniChargeAndroidTheme {
-        RecentTransactionsScreenScrollable()
     }
 }

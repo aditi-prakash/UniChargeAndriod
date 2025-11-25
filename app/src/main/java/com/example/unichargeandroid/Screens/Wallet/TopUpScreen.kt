@@ -11,14 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 @Composable
-fun EnterAmountScreenAdaptive() {
+fun TopUpScreen() {
 
     var amount by remember { mutableStateOf("125") }   // Default amount
 
@@ -155,6 +154,6 @@ fun QuickAmountChipAdaptive(amount: String, onClick: () -> Unit) {
 @Composable
 fun EnterAmountScreenAdaptivePreview() {
     UniChargeAndroidTheme {
-        EnterAmountScreenAdaptive()
+        TopUpScreen()
     }
 }

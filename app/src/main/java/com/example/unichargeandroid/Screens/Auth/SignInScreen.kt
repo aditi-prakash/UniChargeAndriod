@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.screens.signin
+package com.example.unichargeandroid.screens.Auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 
 @Composable
-fun EmailSignInScreenMT() {
+fun SignInScreen() {
 
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -157,13 +156,5 @@ fun EmailSignInScreenMT() {
                 style = typography.bodyLarge
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewEmailSignInScreenMT() {
-    MaterialTheme {
-        EmailSignInScreenMT()
     }
 }

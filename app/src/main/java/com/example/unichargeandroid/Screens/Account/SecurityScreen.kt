@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,11 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SecurityScreenUI() {
+fun SecurityScreen() {
     var rememberMe by remember { mutableStateOf(true) }
     var biometric by remember { mutableStateOf(false) }
     var faceId by remember { mutableStateOf(false) }
@@ -111,6 +110,6 @@ fun SecurityToggleRow(label: String, checked: Boolean, onToggle: (Boolean) -> Un
 @Composable
 fun PreviewSecurityScreenMTU() {
     MaterialTheme {
-        SecurityScreenUI()
+        SecurityScreen()
     }
 }

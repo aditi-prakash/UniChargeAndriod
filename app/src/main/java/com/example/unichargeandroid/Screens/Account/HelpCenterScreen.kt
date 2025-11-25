@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HelpCenterScreenUI() {
+fun HelpCenterScreen() {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -159,10 +159,4 @@ fun FAQCard(
             Text(description, style = typography.bodyMedium, color = colors.onSurfaceVariant)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHelpCenterScreenUI() {
-    HelpCenterScreenUI()
 }

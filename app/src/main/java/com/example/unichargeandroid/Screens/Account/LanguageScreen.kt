@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,11 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LanguageScreenUI() {
+fun LanguageScreen() {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -86,13 +85,5 @@ fun LanguageRowItem(text: String, selected: Boolean, onClick: () -> Unit) {
                 tint = colors.primary
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewLanguageScreenUI() {
-    MaterialTheme {
-        LanguageScreenUI()
     }
 }

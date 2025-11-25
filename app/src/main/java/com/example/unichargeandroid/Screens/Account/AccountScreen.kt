@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

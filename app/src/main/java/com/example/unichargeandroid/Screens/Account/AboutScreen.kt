@@ -1,11 +1,10 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -17,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.unichargeandroid.R
 
 @Composable
-fun AboutEVPointScreenUI() {
+fun AboutScreen() {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -129,13 +127,5 @@ fun AboutListItem(title: String) {
             contentDescription = "Navigate",
             modifier = Modifier.size(24.dp)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewAboutEVPointScreenUI() {
-    MaterialTheme {
-        AboutEVPointScreenUI()
     }
 }

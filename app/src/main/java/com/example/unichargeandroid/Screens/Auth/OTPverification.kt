@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.SignUp
+package com.example.unichargeandroid.Screens.Auth
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*

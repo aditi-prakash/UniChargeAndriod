@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ThemeScreenUI() {
+fun ThemeScreen() {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -90,13 +90,5 @@ fun ThemeRowItem(text: String, selected: Boolean, onClick: () -> Unit) {
                 tint = colors.primary
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewThemeScreenUI() {
-    MaterialTheme {
-        ThemeScreenUI()
     }
 }

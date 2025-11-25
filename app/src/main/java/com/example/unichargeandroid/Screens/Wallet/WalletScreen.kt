@@ -15,14 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 
 @Composable
-fun WalletCardScreen() {
+fun WalletScreen() {
 
     var selectedMethod by remember { mutableStateOf("UPI") }
     val methods = listOf("UPI", "Credit Card", "Debit Card", "Net Banking")
@@ -177,7 +176,7 @@ fun WalletCardScreen() {
 
         // --------- PAYMENT METHOD LIST ---------
         methods.forEach { method ->
-            PaymentMethodItemAdaptive(
+            PaymentMethodItem(
                 method = method,
                 selected = selectedMethod == method,
                 onSelect = { selectedMethod = method }
@@ -190,7 +189,7 @@ fun WalletCardScreen() {
 }
 
 @Composable
-fun PaymentMethodItemAdaptive(
+fun PaymentMethodItem(
     method: String,
     selected: Boolean,
     onSelect: () -> Unit
@@ -245,6 +244,6 @@ fun PaymentMethodItemAdaptive(
 @Composable
 fun WalletCardScreenScrollablePreview() {
     UniChargeAndroidTheme {
-        WalletCardScreen()
+        WalletScreen()
     }
 }

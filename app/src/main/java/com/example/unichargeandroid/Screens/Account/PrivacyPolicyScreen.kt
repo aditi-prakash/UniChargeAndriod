@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -120,12 +120,4 @@ fun PolicySection(title: String, desc: String) {
     )
 
     Spacer(Modifier.height(22.dp))
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPrivacyPolicyScreen() {
-    MaterialTheme {
-        PrivacyPolicyScreen()
-    }
 }

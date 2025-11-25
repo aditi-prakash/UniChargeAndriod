@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.SignUp
+package com.example.unichargeandroid.Screens.Auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,14 +19,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun EmailSignInScreen(modifier: Modifier = Modifier) {
+fun SignUpScreen(modifier: Modifier = Modifier) {
 
-    var fullName by remember { mutableStateOf("") } // <-- New field
+    var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -184,10 +183,4 @@ fun EmailSignInScreen(modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EmailSignInScreenPreview() {
-    EmailSignInScreen()
 }

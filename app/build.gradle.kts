@@ -56,4 +56,21 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    val nav_version = "2.9.0"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    implementation("androidx.compose.material:material:1.6.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

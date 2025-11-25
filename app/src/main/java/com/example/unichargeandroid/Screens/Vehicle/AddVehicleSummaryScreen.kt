@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.AddVehicle
+package com.example.unichargeandroid.Screens.Vehicle
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

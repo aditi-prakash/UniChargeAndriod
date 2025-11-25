@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home
+package com.example.unichargeandroid.Screens.Vehicle
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Screens.Components.HomeBottomNav
 @Composable
-fun VehicleScreenAdaptive(
+fun VehicleScreen(
     onAddVehicleClick: () -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
@@ -86,10 +86,3 @@ fun VehicleScreenAdaptive(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun VehicleScreenAdaptivePreview() {
-    MaterialTheme {
-        VehicleScreenAdaptive()
-    }
-}

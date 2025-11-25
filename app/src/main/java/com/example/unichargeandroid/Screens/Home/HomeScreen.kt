@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Screens.Components.HomeBottomNav
 @Composable
-fun HomeScreenAdaptive() {
+fun HomeScreen() {
 
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -145,6 +145,6 @@ fun SearchBarSectionAdaptive() {
 @Composable
 fun HomeScreenAdaptivePreview() {
     MaterialTheme {
-        HomeScreenAdaptive()
+        HomeScreen()
     }
 }

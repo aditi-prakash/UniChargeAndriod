@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens
+package com.example.unichargeandroid.Screens.Auth
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.Image

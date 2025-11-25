@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.AccountSection
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PersonalInfoScreenUI() {
+fun EditProfileScreen() {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -173,6 +173,6 @@ fun UnderlineText(value: String, placeholder: String, modifier: Modifier = Modif
 @Composable
 fun PreviewPersonalInfoScreenUI() {
     MaterialTheme {
-        PersonalInfoScreenUI()
+        EditProfileScreen()
     }
 }
