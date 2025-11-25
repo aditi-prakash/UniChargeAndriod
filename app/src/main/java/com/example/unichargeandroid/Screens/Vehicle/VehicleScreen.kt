@@ -12,13 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.unichargeandroid.R
-import com.example.unichargeandroid.Screens.Components.HomeBottomNav
+import com.example.unichargeandroid.Routes
+import com.example.unichargeandroid.Screens.Components.BottomNavBar
+
+
 @Composable
 fun VehicleScreen(
+    navController : NavController,
     onAddVehicleClick: () -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
@@ -36,7 +40,7 @@ fun VehicleScreen(
                 Icon(Icons.Default.Add, contentDescription = "Add Vehicle")
             }
         },
-        bottomBar = { HomeBottomNav() }
+        bottomBar = { BottomNavBar(navController, Routes.VehicleScreen) }
     ) { padding ->
 
         Column(

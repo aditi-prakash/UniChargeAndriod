@@ -17,16 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.unichargeandroid.R
-import com.example.unichargeandroid.Screens.Components.HomeBottomNav
+import com.example.unichargeandroid.Routes
+import com.example.unichargeandroid.Screens.Components.BottomNavBar
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController : NavController) {
 
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
     Scaffold(
-        bottomBar = { HomeBottomNav() }
+        bottomBar = { BottomNavBar(navController, Routes.HomeScreen) }
     ) { padding ->
 
         Column(
@@ -138,13 +140,5 @@ fun SearchBarSectionAdaptive() {
                 tint = colors.primary
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenAdaptivePreview() {
-    MaterialTheme {
-        HomeScreen()
     }
 }

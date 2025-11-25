@@ -2,6 +2,7 @@ package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,24 +11,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.unichargeandroid.R
-import com.example.unichargeandroid.Screens.Components.HomeBottomNav
+import com.example.unichargeandroid.Routes
+import com.example.unichargeandroid.Screens.Components.BottomNavBar
 
 @Composable
-fun AccountScreen() {
+fun AccountScreen(navController: NavController) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
     Scaffold(
-        bottomBar = { HomeBottomNav() }
+        bottomBar = { BottomNavBar(navController, Routes.AccountScreen) }
     ) { padding ->
 
         val scrollState = rememberScrollState()
@@ -38,14 +44,11 @@ fun AccountScreen() {
                 .padding(horizontal = 20.dp)
                 .fillMaxSize()
         ) {
-
-            // Scrollable content
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(scrollState)
             ) {
-
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
@@ -57,12 +60,11 @@ fun AccountScreen() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Profile Row
+                // Profile Row (and all other AccountItem rows)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ob1),
@@ -106,45 +108,69 @@ fun AccountScreen() {
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                AccountItem(iconRes = R.drawable.history, title = "History")
-                AccountItem(iconRes = R.drawable.payment_methods, title = "Payment Methods")
+                AccountItem(iconRes = R.drawable.history, title = "History", null)
+                AccountItem(iconRes = R.drawable.payment_methods, title = "Payment Methods", null)
 
-                Divider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
-
-                AccountItem(iconRes = R.drawable.personal_info, title = "Personal Info")
-                AccountItem(iconRes = R.drawable.security, title = "Security")
-                AccountItemRightText(iconRes = R.drawable.language, title = "Language", value = "English (US)")
-                AccountItemRightText(iconRes = R.drawable.dark_mode, title = "Theme", value = "Auto")
-
-                Divider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
-
-                AccountItem(iconRes = R.drawable.help, title = "Help Center")
-                AccountItem(iconRes = R.drawable.privacy_policy, title = "Privacy Policy")
-                AccountItem(iconRes = R.drawable.aboutev, title = "About EVPoint")
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // Logout row fixed at bottom
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { }
-                    .padding(vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logout),
-                    contentDescription = "Logout Icon",
-                    modifier = Modifier.size(24.dp)
+                HorizontalDivider(
+                    Modifier.padding(vertical = 12.dp),
+                    color = colors.outlineVariant
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    "Logout",
-                    fontSize = 16.sp,
-                    color = colors.error,
-                    fontWeight = typography.bodyMedium.fontWeight
+
+                AccountItem(iconRes = R.drawable.personal_info, title = "Personal Info", null)
+                AccountItem(iconRes = R.drawable.security, title = "Security", null)
+                AccountItemRightText(
+                    iconRes = R.drawable.language,
+                    title = "Language",
+                    value = "English (US)"
                 )
+                AccountItemRightText(
+                    iconRes = R.drawable.dark_mode,
+                    title = "Theme",
+                    value = "Auto"
+                )
+
+                HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
+
+                AccountItem(
+                    iconRes = R.drawable.help,
+                    title = "Help Center",
+                    MaterialTheme.colorScheme.onBackground
+                )
+                AccountItem(
+                    iconRes = R.drawable.privacy_policy,
+                    title = "Privacy Policy",
+                    MaterialTheme.colorScheme.onBackground
+                )
+                AccountItem(iconRes = R.drawable.aboutev, title = "About UniCharge", null)
+
+                HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = {}
+                        )
+                        .padding(vertical = 14.dp)
+                        .padding(bottom = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = "Logout Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(Color.Red)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        "Logout",
+                        fontSize = 18.sp,
+                        color = Color.Red,
+                        fontWeight = typography.bodyMedium.fontWeight
+                    )
+                }
             }
         }
     }
@@ -153,7 +179,8 @@ fun AccountScreen() {
 @Composable
 fun AccountItem(
     iconRes: Int,
-    title: String
+    title: String,
+    iconTint: Color? = MaterialTheme.colorScheme.onBackground
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -161,14 +188,19 @@ fun AccountItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {}
+            )
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            colorFilter = iconTint?.let { ColorFilter.tint(it) }
         )
         Spacer(Modifier.width(16.dp))
         Text(
@@ -198,14 +230,19 @@ fun AccountItemRightText(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {}
+            )
             .padding(vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = null,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
         )
         Spacer(Modifier.width(16.dp))
         Text(
@@ -226,10 +263,4 @@ fun AccountItemRightText(
             tint = colors.onSurfaceVariant
         )
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun AccountScreenPreview() {
-    AccountScreen()
 }
