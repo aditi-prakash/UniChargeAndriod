@@ -1,6 +1,5 @@
 package com.example.unichargeandroid
 
-import WalletScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,23 +7,29 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.unichargeandroid.Screens.Account.AboutScreen
 import com.example.unichargeandroid.Screens.Account.AccountScreen
-import com.example.unichargeandroid.Screens.Account.ContactUsScreen
 import com.example.unichargeandroid.Screens.Account.EditProfileScreen
 import com.example.unichargeandroid.Screens.Account.HistoryScreen
 import com.example.unichargeandroid.Screens.Account.LanguageScreen
 import com.example.unichargeandroid.Screens.Account.PrivacyPolicyScreen
 import com.example.unichargeandroid.Screens.Account.SecurityScreen
 import com.example.unichargeandroid.Screens.Account.ThemeScreen
-import com.example.unichargeandroid.Screens.Home.HelpCenter.HelpCenterScreen
+import com.example.unichargeandroid.Screens.Account.HelpCenterScreen
 import com.example.unichargeandroid.Screens.Home.HomeScreen
+import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen1
+import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen2
+import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen3
 import com.example.unichargeandroid.Screens.Vehicle.AddVehicleScreen
+import com.example.unichargeandroid.Screens.Wallet.WalletScreen
 import com.example.unichargeandroid.Screens.Vehicle.VehicleScreen
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 
@@ -35,6 +40,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             UniChargeAndroidTheme {
+                val bgColor =
+                    MaterialTheme.colorScheme.background.toArgb() // ✔ read inside composable block
+
+                SideEffect {
+                    window.navigationBarColor = bgColor
+
+                    val controller = WindowCompat.getInsetsController(window, window.decorView)
+                    controller.isAppearanceLightNavigationBars = true
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -44,44 +59,66 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Routes.HomeScreen,
                         builder = {
-                            composable(Routes.HomeScreen){
+                            composable(Routes.OnBoardingScreen1) {
+                                OnBoardingScreen1(
+                                    onBackClick = { navController.popBackStack() },
+                                    onNextClick = { navController.navigate(Routes.OnBoardingScreen2) }
+                                )
+                            }
+                            composable(Routes.OnBoardingScreen2) {
+                                OnBoardingScreen2(
+                                    onBackClick = { navController.popBackStack()},
+                                    onNextClick = { navController.navigate(Routes.OnBoardingScreen3) }
+                                )
+                            }
+                            composable(Routes.OnBoardingScreen3) {
+                                OnBoardingScreen3(
+                                    onBackClick = { navController.popBackStack() },
+                                    onNextClick = { navController.navigate(Routes.HomeScreen) }
+                                )
+                            }
+
+                            composable(Routes.HomeScreen) {
                                 HomeScreen(navController)
                             }
 
-                            composable(Routes.VehicleScreen){
+                            composable(Routes.VehicleScreen) {
                                 VehicleScreen(navController)
                             }
 
-                            composable(Routes.WalletScreen){
+                            composable(Routes.WalletScreen) {
                                 WalletScreen(navController)
                             }
 
-                            composable(Routes.AccountScreen){
+                            composable(Routes.AccountScreen) {
                                 AccountScreen(navController)
                             }
+                            composable(Routes.AddVehicleScreen) {
+                                AddVehicleScreen()
+                            }
 
-                            composable(Routes.AboutScreen){
+                            composable(Routes.AboutScreen) {
                                 AboutScreen()
                             }
-                            composable(Routes.EditProfileScreen){
+                            composable(Routes.EditProfileScreen) {
                                 EditProfileScreen()
                             }
-                            composable(Routes.HelpCenterScreen){
+                            composable(Routes.HelpCenterScreen) {
                                 HelpCenterScreen()
                             }
-                            composable(Routes.HistoryScreen){
+                            composable(Routes.HistoryScreen) {
                                 HistoryScreen()
                             }
-                            composable(Routes.LanguageScreen){
+                            composable(Routes.LanguageScreen) {
                                 LanguageScreen()
                             }
-                            composable(Routes.PrivacyPolicyScreen){
+                            composable(Routes.PrivacyPolicyScreen) {
                                 PrivacyPolicyScreen()
                             }
-                            composable(Routes.SecurityScreen){
+                            composable(Routes.SecurityScreen) {
                                 SecurityScreen()
                             }
-                            composable(Routes.ThemeScreen){
+                            composable(Routes.ThemeScreen) {
                                 ThemeScreen()
                             }
                         }
@@ -94,10 +131,16 @@ class MainActivity : ComponentActivity() {
 
 
 object Routes {
+    var OnBoardingScreen1 = "OnBoardingScreen1"
+    var OnBoardingScreen2 = "OnBoardingScreen2"
+    var OnBoardingScreen3 = "OnBoardingScreen3"
+
     var HomeScreen = "HomeScreen"
     var VehicleScreen = "VehicleScreen"
     var WalletScreen = "WalletScreen"
     var AccountScreen = "AccountScreen"
+
+    var AddVehicleScreen = "AddVehicleScreen"
 
     var AboutScreen = "AboutScreen"
     var EditProfileScreen = "EditProfileScreen"

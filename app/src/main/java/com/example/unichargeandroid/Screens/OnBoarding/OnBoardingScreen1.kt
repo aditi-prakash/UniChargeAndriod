@@ -9,18 +9,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnBoardingScreen1() {
+fun OnBoardingScreen1(
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -105,9 +106,9 @@ fun OnBoardingScreen1() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            // Skip
+            // Back
             Button(
-                onClick = {},
+                onClick = onBackClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.secondaryContainer,
                     contentColor = colors.primary
@@ -117,14 +118,14 @@ fun OnBoardingScreen1() {
                     .height(48.dp),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "Skip", fontSize = 16.sp, fontWeight = typography.labelLarge.fontWeight)
+                Text(text = "Back", fontSize = 16.sp, fontWeight = typography.labelLarge.fontWeight)
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
             // Next
             Button(
-                onClick = {},
+                onClick = onNextClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.primary,
                     contentColor = colors.onPrimary
@@ -139,13 +140,5 @@ fun OnBoardingScreen1() {
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewOnBoardingScreen1() {
-    MaterialTheme {
-        OnBoardingScreen1()
     }
 }

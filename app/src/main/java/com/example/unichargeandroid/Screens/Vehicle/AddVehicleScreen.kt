@@ -192,9 +192,3 @@ fun DropdownField(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun AddVehicleScreenPreview() {
-    AddVehicleScreen()
-}

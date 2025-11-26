@@ -1,6 +1,7 @@
 package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -41,30 +43,34 @@ fun AccountScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 30.dp)
+                .padding(top = 15.dp)
                 .fillMaxSize()
+                .background(colors.background)
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "Account",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.onBackground
+            )
+
             Column(
                 modifier = Modifier
+                    .padding(top = 20.dp)
                     .weight(1f)
                     .verticalScroll(scrollState)
+                    .background(colors.background)
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = "Account",
-                    fontSize = 24.sp,
-                    fontWeight = typography.titleLarge.fontWeight,
-                    color = colors.onBackground
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
 
                 // Profile Row (and all other AccountItem rows)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(colors.background)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ob1),

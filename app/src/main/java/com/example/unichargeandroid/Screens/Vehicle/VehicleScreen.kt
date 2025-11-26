@@ -1,6 +1,7 @@
 package com.example.unichargeandroid.Screens.Vehicle
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -23,7 +24,6 @@ import com.example.unichargeandroid.Screens.Components.BottomNavBar
 @Composable
 fun VehicleScreen(
     navController : NavController,
-    onAddVehicleClick: () -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -31,7 +31,9 @@ fun VehicleScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onAddVehicleClick,
+                onClick = {
+                    navController.navigate(Routes.AddVehicleScreen)
+                },
                 containerColor = colors.primary,
                 contentColor = Color.White,
                 shape = CircleShape,
@@ -42,13 +44,14 @@ fun VehicleScreen(
         },
         bottomBar = { BottomNavBar(navController, Routes.VehicleScreen) }
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(top = 15.dp, start = 18.dp, end = 18.dp, bottom = 18.dp)
+                .background(MaterialTheme.colorScheme.background)
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
 
             Text(
                 text = "My Vehicle",

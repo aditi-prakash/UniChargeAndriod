@@ -2,27 +2,30 @@ package com.example.unichargeandroid.Screens.Home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
+
 @Composable
-fun HomeScreen(navController : NavController) {
+fun HomeScreen(navController: NavController) {
 
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
@@ -30,19 +33,17 @@ fun HomeScreen(navController : NavController) {
     Scaffold(
         bottomBar = { BottomNavBar(navController, Routes.HomeScreen) }
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .navigationBarsPadding()
         ) {
 
             // Top Row: Title + Notifications
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp),
+                    .padding(start = 18.dp, end = 18.dp, top = 15.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -53,17 +54,26 @@ fun HomeScreen(navController : NavController) {
                     color = colors.onBackground
                 )
 
-                IconButton(onClick = {}) {
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(colors.surface, RoundedCornerShape(16.dp)),
+                ) {
                     Icon(
                         imageVector = Icons.Default.Notifications,
                         contentDescription = "Notifications",
-                        tint = colors.primary
+                        tint = colors.primary,
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ){}
                     )
                 }
             }
 
             // Search bar
-            SearchBarSectionAdaptive()
+            SearchBarSection()
 
             // Map image with fixed height
             Image(
@@ -82,7 +92,7 @@ fun HomeScreen(navController : NavController) {
 }
 
 @Composable
-fun SearchBarSectionAdaptive() {
+fun SearchBarSection() {
     val colors = MaterialTheme.colorScheme
 
     Row(

@@ -134,56 +134,6 @@ fun TopUpWalletScreen() {
     }
 }
 
-@Composable
-fun PaymentMethodItem(
-    method: String,
-    selected: Boolean,
-    onSelect: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                else MaterialTheme.colorScheme.surface
-            )
-            .border(
-                width = if (selected) 2.dp else 1.dp,
-                color = if (selected) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.outlineVariant,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .padding(14.dp)
-            .clickable { onSelect() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        // Circular selector
-        Box(
-            modifier = Modifier
-                .size(24.dp)
-                .border(
-                    width = 2.dp,
-                    color = if (selected) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.outlineVariant,
-                    shape = CircleShape
-                )
-                .background(
-                    if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                    CircleShape
-                )
-        )
-
-        Spacer(modifier = Modifier.width(14.dp))
-
-        Text(
-            text = method,
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

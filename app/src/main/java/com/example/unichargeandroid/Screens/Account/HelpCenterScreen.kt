@@ -1,4 +1,4 @@
-package com.example.unichargeandroid.Screens.Home.HelpCenter
+package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

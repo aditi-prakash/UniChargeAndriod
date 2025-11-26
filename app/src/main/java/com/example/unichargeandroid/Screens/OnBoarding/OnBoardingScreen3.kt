@@ -18,7 +18,10 @@ import com.example.unichargeandroid.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnBoardingScreen3() {
+fun OnBoardingScreen3(
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -101,9 +104,9 @@ fun OnBoardingScreen3() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Skip
+            // Back
             Button(
-                onClick = {},
+                onClick = onBackClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.secondaryContainer,
                     contentColor = colors.primary
@@ -124,7 +127,7 @@ fun OnBoardingScreen3() {
 
             // Next
             Button(
-                onClick = {},
+                onClick = onNextClick,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.primary,
                     contentColor = colors.onPrimary
