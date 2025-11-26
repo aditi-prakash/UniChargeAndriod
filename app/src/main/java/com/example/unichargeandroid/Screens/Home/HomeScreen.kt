@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,12 +24,16 @@ import androidx.navigation.NavController
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun HomeScreen(navController: NavController) {
-
+    val systemUiController = rememberSystemUiController()
     val colors = MaterialTheme.colorScheme
-    val typography = MaterialTheme.typography
+
+    SideEffect {
+        systemUiController.isStatusBarVisible = true
+    }
 
     Scaffold(
         bottomBar = { BottomNavBar(navController, Routes.HomeScreen) }

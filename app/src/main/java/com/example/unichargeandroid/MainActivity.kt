@@ -15,6 +15,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.unichargeandroid.Screens.Auth.LoginScreen
 import com.example.unichargeandroid.Screens.Account.AboutScreen
 import com.example.unichargeandroid.Screens.Account.AccountScreen
 import com.example.unichargeandroid.Screens.Account.EditProfileScreen
@@ -24,6 +25,8 @@ import com.example.unichargeandroid.Screens.Account.PrivacyPolicyScreen
 import com.example.unichargeandroid.Screens.Account.SecurityScreen
 import com.example.unichargeandroid.Screens.Account.ThemeScreen
 import com.example.unichargeandroid.Screens.Account.HelpCenterScreen
+import com.example.unichargeandroid.screens.Auth.SignInScreen
+import com.example.unichargeandroid.Screens.Auth.SignUpScreen
 import com.example.unichargeandroid.Screens.Home.HomeScreen
 import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen1
 import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen2
@@ -57,7 +60,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.HomeScreen,
+                        startDestination = Routes.OnBoardingScreen1,
                         builder = {
                             composable(Routes.OnBoardingScreen1) {
                                 OnBoardingScreen1(
@@ -67,15 +70,28 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(Routes.OnBoardingScreen2) {
                                 OnBoardingScreen2(
-                                    onBackClick = { navController.popBackStack()},
+                                    onBackClick = { navController.popBackStack() },
                                     onNextClick = { navController.navigate(Routes.OnBoardingScreen3) }
                                 )
                             }
                             composable(Routes.OnBoardingScreen3) {
                                 OnBoardingScreen3(
                                     onBackClick = { navController.popBackStack() },
-                                    onNextClick = { navController.navigate(Routes.HomeScreen) }
+                                    onNextClick = { navController.navigate(Routes.LoginScreen) }
                                 )
+                            }
+                            composable(Routes.LoginScreen) {
+                                LoginScreen(
+                                    onSignInWithEmail = { navController.navigate(Routes.SignInScreen) },
+                                    onSignUp = { navController.navigate(Routes.SignUpScreen) },
+                                    onGoogleSignIn = { navController.navigate(Routes.HomeScreen) }
+                                )
+                            }
+                            composable(Routes.SignInScreen) {
+                                SignInScreen()
+                            }
+                            composable(Routes.SignUpScreen) {
+                                SignUpScreen()
                             }
 
                             composable(Routes.HomeScreen) {
@@ -134,6 +150,10 @@ object Routes {
     var OnBoardingScreen1 = "OnBoardingScreen1"
     var OnBoardingScreen2 = "OnBoardingScreen2"
     var OnBoardingScreen3 = "OnBoardingScreen3"
+
+    var LoginScreen = "LoginScreen"
+    var SignInScreen = "SignInScreen"
+    var SignUpScreen = "SignUpScreen"
 
     var HomeScreen = "HomeScreen"
     var VehicleScreen = "VehicleScreen"

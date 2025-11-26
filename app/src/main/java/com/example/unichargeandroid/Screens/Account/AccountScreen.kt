@@ -73,7 +73,7 @@ fun AccountScreen(navController: NavController) {
                         .background(colors.background)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ob1),
+                        painter = painterResource(id = R.drawable.ob1_light),
                         contentDescription = "Profile Image",
                         modifier = Modifier
                             .size(60.dp)

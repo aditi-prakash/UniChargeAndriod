@@ -133,7 +133,7 @@ fun CompleteProfileScreen() {
                 .align(Alignment.CenterHorizontally)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ob4),
+                painter = painterResource(id = R.drawable.ob4_light),
                 contentDescription = null,
                 modifier = Modifier
                     .size(100.dp)
