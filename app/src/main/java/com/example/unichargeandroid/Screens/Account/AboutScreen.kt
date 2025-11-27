@@ -2,6 +2,8 @@ package com.example.unichargeandroid.Screens.Account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,15 +13,19 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import com.example.unichargeandroid.R
 
 @Composable
-fun AboutScreen() {
+fun AboutScreen(
+    onBackClick: () -> Unit = {},
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -37,7 +43,12 @@ fun AboutScreen() {
             Image(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Back",
-                modifier = Modifier.size(26.dp)
+                modifier = Modifier.size(26.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
+                colorFilter = ColorFilter.tint(colors.onBackground)
             )
             Spacer(Modifier.width(16.dp))
             Text(
@@ -48,7 +59,7 @@ fun AboutScreen() {
             )
         }
 
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(15.dp))
 
         // EVPoint Logo
         Box(
@@ -125,7 +136,8 @@ fun AboutListItem(title: String) {
         Image(
             imageVector = Icons.Default.KeyboardArrowRight,
             contentDescription = "Navigate",
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp),
+            colorFilter = ColorFilter.tint(colors.onSurface)
         )
     }
 }

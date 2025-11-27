@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,21 +28,11 @@ fun LogoutCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // Top drag bar
-        Box(
-            modifier = Modifier
-                .width(60.dp)
-                .height(6.dp)
-                .background(colors.outlineVariant, RoundedCornerShape(50))
-        )
-
-        Spacer(Modifier.height(22.dp))
-
         Text(
             text = "Logout",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = colors.error
+            color = Color.Red
         )
 
         Spacer(Modifier.height(18.dp))

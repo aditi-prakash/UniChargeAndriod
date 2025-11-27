@@ -19,14 +19,16 @@ import androidx.compose.ui.unit.dp
 import com.example.unichargeandroid.Screens.Account.ContactUsSection
 
 @Composable
-fun HelpCenterScreen() {
+fun HelpCenterScreen(
+    onBackClick: () -> Unit = {},
+) {
 
     var selectedTab by remember { mutableStateOf("FAQ") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 18.dp, vertical = 40.dp)
+            .padding(horizontal = 18.dp, vertical = 50.dp)
             .verticalScroll(rememberScrollState())
     ) {
 
@@ -36,9 +38,13 @@ fun HelpCenterScreen() {
                 Icons.Default.ArrowBack,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
             )
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(16.dp))
 
             Text(
                 "Help Center",
@@ -59,7 +65,10 @@ fun HelpCenterScreen() {
             // FAQ TAB
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable { selectedTab = "FAQ" }
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { selectedTab = "FAQ" }
             ) {
                 Text(
                     "FAQ",
@@ -82,7 +91,10 @@ fun HelpCenterScreen() {
             // CONTACT TAB
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable { selectedTab = "Contact" }
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { selectedTab = "Contact" }
             ) {
                 Text(
                     "Contact us",

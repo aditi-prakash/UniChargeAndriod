@@ -14,7 +14,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,15 +27,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
+import com.example.unichargeandroid.Screens.Components.LogoutCard
 
 @Composable
 fun AccountScreen(navController: NavController) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
+
+    // State to control the logout dialog visibility
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = { BottomNavBar(navController, Routes.AccountScreen) }
@@ -73,7 +81,7 @@ fun AccountScreen(navController: NavController) {
                         .background(colors.background)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ob1_light),
+                        painter = painterResource(id = R.drawable.personal_info),
                         contentDescription = "Profile Image",
                         modifier = Modifier
                             .size(60.dp)
@@ -122,7 +130,7 @@ fun AccountScreen(navController: NavController) {
                 )
                 AccountItem(
                     iconRes = R.drawable.payment_methods, title = "Payment Methods", null,
-                    onClick = { navController.navigate(Routes.AboutScreen) }
+                    onClick = { navController.navigate(Routes.PaymentMethodsScreen) }
                 )
 
                 HorizontalDivider(
@@ -130,12 +138,6 @@ fun AccountScreen(navController: NavController) {
                     color = colors.outlineVariant
                 )
 
-                AccountItem(
-                    iconRes = R.drawable.personal_info,
-                    title = "Personal Info",
-                    null,
-                    onClick = { navController.navigate(Routes.AboutScreen) }
-                )
                 AccountItem(
                     iconRes = R.drawable.security,
                     title = "Security",
@@ -184,7 +186,7 @@ fun AccountScreen(navController: NavController) {
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            onClick = {}
+                            onClick = { showLogoutDialog = true }
                         )
                         .padding(vertical = 14.dp)
                         .padding(bottom = 14.dp),
@@ -205,6 +207,25 @@ fun AccountScreen(navController: NavController) {
                     )
                 }
             }
+        }
+    }
+
+    // Logout Confirmation Dialog
+    if (showLogoutDialog) {
+        Dialog(
+            onDismissRequest = { showLogoutDialog = false }
+        ) {
+            LogoutCard(
+                onConfirmLogout = {
+                    // Handle logout logic here
+                    // For example: clear user session, navigate to login screen, etc.
+                    showLogoutDialog = false
+                    navController.navigate(Routes.LoginScreen) {
+                        popUpTo(Routes.AccountScreen) { inclusive = true }
+                    }
+                },
+                onCancel = { showLogoutDialog = false }
+            )
         }
     }
 }

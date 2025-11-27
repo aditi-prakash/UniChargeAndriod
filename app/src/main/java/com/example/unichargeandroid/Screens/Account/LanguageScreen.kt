@@ -1,6 +1,8 @@
 package com.example.unichargeandroid.Screens.Account
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -9,11 +11,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LanguageScreen() {
+fun LanguageScreen(
+    onBackClick: () -> Unit = {},
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -28,7 +33,16 @@ fun LanguageScreen() {
 
         // Top Bar
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = colors.onBackground, modifier = Modifier.size(26.dp))
+            Image(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                modifier = Modifier.size(26.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
+                colorFilter = ColorFilter.tint(colors.onBackground)
+            )
             Spacer(Modifier.width(16.dp))
             Text("Language", style = typography.titleLarge, color = colors.onBackground)
         }

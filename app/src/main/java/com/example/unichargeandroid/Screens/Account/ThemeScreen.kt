@@ -1,5 +1,6 @@
 package com.example.unichargeandroid.Screens.Account
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -10,11 +11,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ThemeScreen() {
+fun ThemeScreen(
+    onBackClick: () -> Unit = {},
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
@@ -23,13 +27,22 @@ fun ThemeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 36.dp, start = 22.dp, end = 22.dp, bottom = 22.dp),
+            .padding(top = 50.dp, start = 22.dp, end = 22.dp, bottom = 22.dp),
         verticalArrangement = Arrangement.Top
     ) {
 
         // Top Bar
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = colors.onBackground, modifier = Modifier.size(26.dp))
+            Image(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                modifier = Modifier.size(26.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
+                colorFilter = ColorFilter.tint(colors.onBackground)
+            )
             Spacer(Modifier.width(16.dp))
             Text("Theme", style = typography.titleLarge, color = colors.onBackground)
         }
@@ -54,9 +67,6 @@ fun ThemeScreen() {
             selected = selectedTheme == "Dark Theme",
             onClick = { selectedTheme = "Dark Theme" }
         )
-
-        Spacer(Modifier.height(8.dp))
-        Divider(color = colors.surfaceVariant, thickness = 1.dp)
     }
 }
 

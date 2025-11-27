@@ -1,7 +1,9 @@
 package com.example.unichargeandroid.Screens.Account
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,11 +13,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SecurityScreen() {
+fun SecurityScreen(
+    onBackClick: () -> Unit = {},
+) {
     var rememberMe by remember { mutableStateOf(true) }
     var biometric by remember { mutableStateOf(false) }
     var faceId by remember { mutableStateOf(false) }
@@ -28,13 +33,22 @@ fun SecurityScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 36.dp, start = 22.dp, end = 22.dp, bottom = 22.dp),
+            .padding(top = 50.dp, start = 22.dp, end = 22.dp, bottom = 22.dp),
         verticalArrangement = Arrangement.Top
     ) {
 
         // Header
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", modifier = Modifier.size(26.dp), tint = colors.onBackground)
+            Image(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                modifier = Modifier.size(26.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
+                colorFilter = ColorFilter.tint(colors.onBackground)
+            )
             Spacer(Modifier.width(16.dp))
             Text("Security", style = typography.titleLarge, color = colors.onBackground)
         }
@@ -54,12 +68,19 @@ fun SecurityScreen() {
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable { },
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("Device Management", style = typography.titleMedium, color = colors.onBackground)
-            Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Navigate", tint = colors.onSurfaceVariant)
+            Icon(
+                Icons.Default.KeyboardArrowRight,
+                contentDescription = "Navigate",
+                tint = colors.onSurfaceVariant
+            )
         }
 
         Spacer(Modifier.height(20.dp))

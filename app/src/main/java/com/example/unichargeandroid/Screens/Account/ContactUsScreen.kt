@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,25 +23,31 @@ import androidx.compose.ui.unit.sp
 import com.example.unichargeandroid.R
 
 @Composable
-fun ContactUsScreen() {
+fun ContactUsScreen(
+    onBackClick: () -> Unit = {},
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 40.dp, start = 18.dp, end = 18.dp)
+            .padding(top = 50.dp, start = 18.dp, end = 18.dp)
     ) {
 
         // Top Bar
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.ArrowBack,
+            Image(
+                imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Back",
-                tint = colors.onBackground,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(26.dp).clickable(
+                    onClick = onBackClick,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ),
+                colorFilter = ColorFilter.tint(colors.onBackground)
             )
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(16.dp))
             Text(
                 "Help Center",
                 fontSize = 20.sp,

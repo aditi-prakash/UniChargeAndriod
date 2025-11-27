@@ -34,6 +34,7 @@ import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen3
 import com.example.unichargeandroid.Screens.Vehicle.AddVehicleScreen
 import com.example.unichargeandroid.Screens.Wallet.WalletScreen
 import com.example.unichargeandroid.Screens.Vehicle.VehicleScreen
+import com.example.unichargeandroid.Screens.Wallet.PaymentMethodsScreen
 import com.example.unichargeandroid.ui.theme.UniChargeAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -88,10 +89,16 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Routes.SignInScreen) {
-                                SignInScreen()
+                                SignInScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                    onContinueClick = { navController.navigate(Routes.HomeScreen) }
+                                )
                             }
                             composable(Routes.SignUpScreen) {
-                                SignUpScreen()
+                                SignUpScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                    onContinueClick = { navController.navigate(Routes.HomeScreen) }
+                                )
                             }
 
                             composable(Routes.HomeScreen) {
@@ -110,32 +117,53 @@ class MainActivity : ComponentActivity() {
                                 AccountScreen(navController)
                             }
                             composable(Routes.AddVehicleScreen) {
-                                AddVehicleScreen()
+                                AddVehicleScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
+                            }
+                            composable(Routes.PaymentMethodsScreen) {
+                                PaymentMethodsScreen(navController)
                             }
 
                             composable(Routes.AboutScreen) {
-                                AboutScreen()
+                                AboutScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
                             }
                             composable(Routes.EditProfileScreen) {
-                                EditProfileScreen()
+                                EditProfileScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
                             }
                             composable(Routes.HelpCenterScreen) {
-                                HelpCenterScreen()
+                                HelpCenterScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                )
                             }
                             composable(Routes.HistoryScreen) {
-                                HistoryScreen()
+                                HistoryScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
                             }
                             composable(Routes.LanguageScreen) {
-                                LanguageScreen()
+                                LanguageScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
                             }
                             composable(Routes.PrivacyPolicyScreen) {
-                                PrivacyPolicyScreen()
+                                PrivacyPolicyScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                )
                             }
                             composable(Routes.SecurityScreen) {
-                                SecurityScreen()
+                                SecurityScreen(
+                                    onBackClick = { navController.popBackStack() }
+                                )
                             }
                             composable(Routes.ThemeScreen) {
-                                ThemeScreen()
+                                ThemeScreen(
+                                    onBackClick = { navController.popBackStack() },
+                                )
                             }
                         }
                     )
@@ -161,6 +189,7 @@ object Routes {
     var AccountScreen = "AccountScreen"
 
     var AddVehicleScreen = "AddVehicleScreen"
+    var PaymentMethodsScreen = "PaymentMethodsScreen"
 
     var AboutScreen = "AboutScreen"
     var EditProfileScreen = "EditProfileScreen"

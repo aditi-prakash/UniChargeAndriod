@@ -72,14 +72,14 @@ fun TopUpWalletScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Payment Method List
-        methods.forEach { method ->
-            PaymentMethodItem(
-                method = method,
-                selected = selectedMethod == method,
-                onSelect = { selectedMethod = method }
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-        }
+//        methods.forEach { method ->
+//            PaymentMethodItem(
+//                method = method,
+//                selected = selectedMethod == method,
+//                onSelect = { selectedMethod = method }
+//            )
+//            Spacer(modifier = Modifier.height(12.dp))
+//        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
