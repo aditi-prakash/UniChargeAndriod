@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ElectricCar
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -41,7 +43,7 @@ fun VehicleCard(
 
             // 🚗 Vehicle Icon
             Icon(
-                imageVector = Icons.Outlined.Place,
+                imageVector = Icons.Filled.DirectionsCar,
                 contentDescription = null,
                 tint = colors.primary,
                 modifier = Modifier.size(40.dp)
