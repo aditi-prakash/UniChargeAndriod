@@ -98,7 +98,9 @@ fun HomeScreen(
                         modifier = Modifier.clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
-                        ) {}
+                        ) {
+                            navController.navigate(Routes.NotificationScreen)
+                        }
                     )
                 }
             }

@@ -35,12 +35,14 @@ import com.example.unichargeandroid.Screens.Auth.AuthScreen
 import com.example.unichargeandroid.screens.Auth.SignInScreen
 import com.example.unichargeandroid.Screens.Auth.SignUpScreen
 import com.example.unichargeandroid.Screens.Home.HomeScreen
+import com.example.unichargeandroid.Screens.Notification.NotificationScreen
 import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen1
 import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen2
 import com.example.unichargeandroid.Screens.OnBoarding.OnBoardingScreen3
 import com.example.unichargeandroid.Screens.Vehicle.AddVehicleScreen
 import com.example.unichargeandroid.Screens.Wallet.WalletScreen
 import com.example.unichargeandroid.Screens.Vehicle.VehicleScreen
+import com.example.unichargeandroid.Screens.Wallet.AddPaymentMethodScreen
 import com.example.unichargeandroid.Screens.Wallet.PaymentMethodsScreen
 import com.example.unichargeandroid.data.local.TokenManager
 import com.example.unichargeandroid.data.local.UserManager
@@ -199,13 +201,39 @@ fun AppNavigation() {
 
         // Other screens...
         composable(Routes.AddVehicleScreen) {
+            AddVehicleScreen(navController = navController)
+        }
+        composable("${Routes.EditVehicleScreen}/{vehicleId}") { backStackEntry ->
+            val vehicleId = backStackEntry.arguments?.getString("vehicleId")
+            val currentUser = UserManager.getUser()
+            val vehicle = currentUser?.vehicles?.find { it.id == vehicleId }
+
             AddVehicleScreen(
-                onBackClick = { navController.popBackStack() }
+                navController = navController,
+                editingVehicle = vehicle
             )
         }
 
         composable(Routes.PaymentMethodsScreen) {
             PaymentMethodsScreen(navController)
+        }
+        composable(Routes.AddPaymentMethodScreen) {
+            AddPaymentMethodScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.EditPaymentMethodScreen + "/{paymentId}") { backStackEntry ->
+            val paymentId = backStackEntry.arguments?.getString("paymentId")
+            val currentUser = UserManager.getUser()
+            val payment = currentUser?.paymentMethods?.find { it.id == paymentId }
+
+            AddPaymentMethodScreen(
+                onBackClick = { navController.popBackStack() },
+                editingPayment = payment
+            )
+        }
+        composable(Routes.NotificationScreen) {
+            NotificationScreen(navController = navController)
         }
 
         composable(Routes.AboutScreen) {
@@ -273,7 +301,11 @@ object Routes {
     const val AccountScreen = "AccountScreen"
 
     const val AddVehicleScreen = "AddVehicleScreen"
+    const val EditVehicleScreen = "EditVehicleScreen"
     const val PaymentMethodsScreen = "PaymentMethodsScreen"
+    const val AddPaymentMethodScreen = "AddPaymentMethodScreen"
+    const val EditPaymentMethodScreen = "EditPaymentMethodScreen"
+    const val NotificationScreen = "NotificationScreen"
 
     const val AboutScreen = "AboutScreen"
     const val EditProfileScreen = "EditProfileScreen"

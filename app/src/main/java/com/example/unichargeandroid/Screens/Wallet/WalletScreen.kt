@@ -1,5 +1,6 @@
 package com.example.unichargeandroid.Screens.Wallet
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,13 +33,12 @@ import androidx.navigation.NavController
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
 import com.example.unichargeandroid.data.model.AuthState
-import com.example.unichargeandroid.data.model.CardDetails
 import com.example.unichargeandroid.data.model.PaymentMethod
 import com.example.unichargeandroid.data.model.User
 import com.example.unichargeandroid.data.model.Wallet
-import com.example.unichargeandroid.data.model.WalletData
 import com.example.unichargeandroid.viewmodels.AuthViewModel
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun WalletScreen(
     navController: NavController,
@@ -183,7 +183,7 @@ fun WalletScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "₹${currentUser?.wallet?.balance ?: 0.0}",
+                            text = "₹${String.format("%.2f", currentUser?.wallet?.balance ?: 0.0)}",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -220,7 +220,7 @@ fun WalletScreen(
                 WalletInfoItem(
                     icon = Icons.Default.AccountBalanceWallet,
                     title = "Balance",
-                    value = "₹${currentUser?.wallet?.balance ?: 0.0}",
+                    value = "₹${String.format("%.2f", currentUser?.wallet?.balance ?: 0.0)}",
                     isWarning = isLowBalance
                 )
 

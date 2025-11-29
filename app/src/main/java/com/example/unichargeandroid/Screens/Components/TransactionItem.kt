@@ -1,6 +1,7 @@
 package com.example.unichargeandroid.Screens.Components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ fun TransactionItem(
     price: String,
     date: String,
     time: String,
+    priceColor: Color = Color(0xFFFF3B30),
     onClick: () -> Unit = {}
 ) {
 
@@ -35,7 +37,7 @@ fun TransactionItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .clickable(onClick = onClick)
     ) {
 
         Row(
@@ -45,18 +47,26 @@ fun TransactionItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // Status Pill (kept red as per design)
+            // Status Pill with dynamic color based on status
+            val statusColor = when (status.lowercase()) {
+                "completed", "success", "paid" -> Color(0xFF34C759) to Color(0x1434C759) // Green
+                "pending" -> Color(0xFFFF9500) to Color(0x14FF9500) // Orange
+                "failed", "declined" -> Color(0xFFFF3B30) to Color(0x14FF3B30) // Red
+                "refunded" -> Color(0xFF007AFF) to Color(0x14007AFF) // Blue
+                else -> Color(0xFFFF3B30) to Color(0x14FF3B30) // Default red
+            }
+
             Box(
                 modifier = Modifier
                     .background(
-                        color = Color(0x14FF3B30),
+                        color = statusColor.second,
                         shape = RoundedCornerShape(10.dp)
                     )
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
                     text = status,
-                    color = Color(0xFFFF3B30),
+                    color = statusColor.first,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -91,12 +101,12 @@ fun TransactionItem(
                 }
             }
 
-            // Price (red as per screenshot)
+            // Price with dynamic color
             Text(
                 text = price,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFFFF3B30)
+                color = priceColor
             )
 
             Spacer(modifier = Modifier.width(8.dp))

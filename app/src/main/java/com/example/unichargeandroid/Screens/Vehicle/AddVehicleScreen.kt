@@ -19,30 +19,43 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.unichargeandroid.data.model.Vehicle
+import com.example.unichargeandroid.viewmodels.AuthViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddVehicleScreen(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {}
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel(),
+    editingVehicle: Vehicle? = null
 ) {
 
-    var make by remember { mutableStateOf("") }
-    var model by remember { mutableStateOf("") }
-    var batteryCapacityKwh by remember { mutableStateOf("") }
-    var preferredConnector by remember { mutableStateOf("") }
+    var make by remember { mutableStateOf(editingVehicle?.make ?: "") }
+    var model by remember { mutableStateOf(editingVehicle?.model ?: "") }
+    var batteryCapacityKwh by remember {
+        mutableStateOf(editingVehicle?.batteryCapacityKwh?.toString() ?: "")
+    }
+    var preferredConnector by remember {
+        mutableStateOf(editingVehicle?.preferredConnector ?: "")
+    }
 
-    val connectorTypes = listOf("CCS2", "CHAdeMO", "Type2", "GB/T")
+    val connectorTypes = listOf("CCS2", "CHAdeMO", "Type 2", "GB/T", "Type 1", "CCS1")
 
     var expandedConnector by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     val colors = MaterialTheme.colorScheme
+    val currentUser by authViewModel.currentUser.collectAsState()
 
     Scaffold(
-        modifier = modifier,
         topBar = {
             Row(
                 modifier = Modifier
@@ -56,7 +69,7 @@ fun AddVehicleScreen(
                     modifier = Modifier
                         .size(26.dp)
                         .clickable(
-                            onClick = onBackClick,
+                            onClick = { navController.popBackStack() },
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ),
@@ -66,7 +79,7 @@ fun AddVehicleScreen(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = "Add Vehicle",
+                    text = if (editingVehicle != null) "Edit Vehicle" else "Add Vehicle",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = colors.onBackground
@@ -85,12 +98,27 @@ fun AddVehicleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Error message
+            if (showError) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
             // Make (Brand)
             TextFieldWithLabel(
                 label = "Make",
                 value = make,
-                onValueChange = { make = it },
-                placeholder = "Enter vehicle make (e.g., Tesla, BMW)"
+                onValueChange = {
+                    make = it
+                    showError = false
+                },
+                placeholder = "Enter vehicle make (e.g., Tesla, Tata)"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -99,8 +127,11 @@ fun AddVehicleScreen(
             TextFieldWithLabel(
                 label = "Model",
                 value = model,
-                onValueChange = { model = it },
-                placeholder = "Enter vehicle model (e.g., Model 3, i4)"
+                onValueChange = {
+                    model = it
+                    showError = false
+                },
+                placeholder = "Enter vehicle model (e.g., Nexon EV)"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -109,9 +140,14 @@ fun AddVehicleScreen(
             TextFieldWithLabel(
                 label = "Battery Capacity (kWh)",
                 value = batteryCapacityKwh,
-                onValueChange = { batteryCapacityKwh = it },
+                onValueChange = {
+                    if (it.isEmpty() || it.toDoubleOrNull() != null) {
+                        batteryCapacityKwh = it
+                        showError = false
+                    }
+                },
                 placeholder = "Enter battery capacity in kWh",
-                keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                keyboardType = KeyboardType.Number
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -120,7 +156,10 @@ fun AddVehicleScreen(
             DropdownField(
                 label = "Preferred Connector",
                 value = preferredConnector,
-                onValueChange = { preferredConnector = it },
+                onValueChange = {
+                    preferredConnector = it
+                    showError = false
+                },
                 options = connectorTypes,
                 expanded = expandedConnector,
                 onExpandedChange = { expandedConnector = it }
@@ -130,16 +169,23 @@ fun AddVehicleScreen(
 
             Button(
                 onClick = {
-                    // Validate and add the vehicle
                     if (validateInputs(make, model, batteryCapacityKwh, preferredConnector)) {
-                        // Handle add vehicle logic
-                        val vehicleData = mapOf(
-                            "make" to make,
-                            "model" to model,
-                            "batteryCapacityKwh" to batteryCapacityKwh.toDouble(),
-                            "preferredConnector" to preferredConnector
+                        // Handle add/edit vehicle logic
+                        val newVehicle = Vehicle(
+                            id = editingVehicle?.id ?: generateVehicleId(currentUser?.vehicles ?: emptyList()),
+                            make = make.trim(),
+                            model = model.trim(),
+                            batteryCapacityKwh = batteryCapacityKwh.toInt(),
+                            preferredConnector = preferredConnector,
+                            createdAt = editingVehicle?.createdAt ?: getCurrentDateTime()
                         )
-                        // Call your API or save to database
+
+                        // Update user's vehicles
+                        updateUserVehicles(authViewModel, newVehicle, editingVehicle != null)
+                        navController.popBackStack()
+                    } else {
+                        showError = true
+                        errorMessage = "Please fill all fields correctly. Battery capacity must be a number."
                     }
                 },
                 modifier = Modifier
@@ -152,7 +198,7 @@ fun AddVehicleScreen(
                 enabled = validateInputs(make, model, batteryCapacityKwh, preferredConnector)
             ) {
                 Text(
-                    text = "Add Vehicle",
+                    text = if (editingVehicle != null) "Update Vehicle" else "Add Vehicle",
                     fontSize = 16.sp,
                     color = colors.onPrimary
                 )
@@ -167,7 +213,7 @@ fun TextFieldWithLabel(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    keyboardType: androidx.compose.ui.text.input.KeyboardType = androidx.compose.ui.text.input.KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val colors = MaterialTheme.colorScheme
 
@@ -276,7 +322,7 @@ fun DropdownField(
     }
 }
 
-// Validation function
+// Helper functions
 private fun validateInputs(
     make: String,
     model: String,
@@ -286,14 +332,43 @@ private fun validateInputs(
     return make.isNotBlank() &&
             model.isNotBlank() &&
             batteryCapacity.isNotBlank() &&
-            batteryCapacity.toDoubleOrNull() != null &&
+            batteryCapacity.toIntOrNull() != null &&
+            batteryCapacity.toInt() > 0 &&
             connector.isNotBlank()
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewAddVehicleScreen() {
-    MaterialTheme {
-        AddVehicleScreen()
+private fun generateVehicleId(existingVehicles: List<Vehicle>): String {
+    val maxId = existingVehicles.maxByOrNull { it.id.toIntOrNull() ?: 0 }?.id?.toIntOrNull() ?: 0
+    return (maxId + 1).toString()
+}
+
+private fun getCurrentDateTime(): String {
+    return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date())
+}
+
+private fun updateUserVehicles(
+    authViewModel: AuthViewModel,
+    newVehicle: Vehicle,
+    isEditing: Boolean
+) {
+    val currentUser = authViewModel.currentUser.value
+    if (currentUser != null) {
+        val updatedVehicles = if (isEditing) {
+            // Update existing vehicle
+            currentUser.vehicles.map { vehicle ->
+                if (vehicle.id == newVehicle.id) newVehicle else vehicle
+            }
+        } else {
+            // Add new vehicle
+            currentUser.vehicles + newVehicle
+        }
+
+        val updatedUser = currentUser.copy(vehicles = updatedVehicles)
+
+        // Update user in ViewModel (this would typically call an API)
+        // authViewModel.updateUser(updatedUser)
+
+        // For now, we'll update the local state
+        // You can add a snackbar or toast to confirm the action
     }
 }

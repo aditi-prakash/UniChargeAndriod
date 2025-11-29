@@ -1,6 +1,5 @@
 package com.example.unichargeandroid.data.model
 
-import android.app.Notification
 import com.google.gson.annotations.SerializedName
 
 data class User(
