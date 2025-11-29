@@ -25,22 +25,25 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.unichargeandroid.data.model.AuthState
+import com.example.unichargeandroid.viewmodels.AuthViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    onContinueClick: () -> Unit = {},
-    onAgreementsClick: () -> Unit = {}
+    onSignUpSuccess: () -> Unit,
+    onSignInClick: () -> Unit = {},
+    onAgreementsClick: () -> Unit = {},
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val systemUiController = rememberSystemUiController()
     val colors = MaterialTheme.colorScheme
 
-    SideEffect {
-        systemUiController.isStatusBarVisible = false
-    }
-
+    // Form state
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -49,6 +52,57 @@ fun SignUpScreen(
     var isChecked by remember { mutableStateOf(true) }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
+
+    // Validation state
+    var fullNameError by remember { mutableStateOf("") }
+    var emailError by remember { mutableStateOf("") }
+    var passwordError by remember { mutableStateOf("") }
+    var confirmPasswordError by remember { mutableStateOf("") }
+    var phoneError by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+
+    // Observe authentication state (for any errors during signup)
+    val authState by authViewModel.authState.collectAsStateWithLifecycle()
+    val signupState by authViewModel.signupState.collectAsStateWithLifecycle()
+
+    // Handle authentication state changes
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Error -> {
+                isLoading = false
+                // Handle signup error
+            }
+
+            else -> {}
+        }
+    }
+
+    // Handle signup state changes
+    LaunchedEffect(signupState) {
+        when (signupState) {
+            is AuthState.Success -> {
+                isLoading = false
+                onSignUpSuccess()
+                authViewModel.resetSignupState()
+            }
+
+            is AuthState.Error -> {
+                isLoading = false
+                // Show error message - you can set specific field errors here
+                passwordError = (signupState as AuthState.Error).message
+            }
+
+            is AuthState.Loading -> {
+                isLoading = true
+            }
+
+            else -> {}
+        }
+    }
+
+    SideEffect {
+        systemUiController.isStatusBarVisible = false
+    }
 
     val annotatedText = buildAnnotatedString {
         append("I agree to UniCharge ")
@@ -122,7 +176,10 @@ fun SignUpScreen(
 
             OutlinedTextField(
                 value = fullName,
-                onValueChange = { fullName = it },
+                onValueChange = {
+                    fullName = it
+                    fullNameError = ""
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -130,15 +187,26 @@ fun SignUpScreen(
                         color = colors.onBackground.copy(alpha = 0.5f)
                     )
                 },
+                isError = fullNameError.isNotEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 shape = RoundedCornerShape(16.dp),
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = colors.surface,
                     focusedContainerColor = colors.surface,
                     unfocusedIndicatorColor = colors.outline.copy(alpha = 0.5f),
-                    focusedIndicatorColor = colors.primary
+                    focusedIndicatorColor = colors.primary,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error
                 )
             )
+
+            if (fullNameError.isNotEmpty()) {
+                Text(
+                    text = fullNameError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -154,7 +222,10 @@ fun SignUpScreen(
 
             OutlinedTextField(
                 value = phone,
-                onValueChange = { phone = it },
+                onValueChange = {
+                    phone = it
+                    phoneError = ""
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -162,15 +233,26 @@ fun SignUpScreen(
                         color = colors.onBackground.copy(alpha = 0.5f)
                     )
                 },
+                isError = phoneError.isNotEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 shape = RoundedCornerShape(16.dp),
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = colors.surface,
                     focusedContainerColor = colors.surface,
                     unfocusedIndicatorColor = colors.outline.copy(alpha = 0.5f),
-                    focusedIndicatorColor = colors.primary
+                    focusedIndicatorColor = colors.primary,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error
                 )
             )
+
+            if (phoneError.isNotEmpty()) {
+                Text(
+                    text = phoneError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -186,7 +268,10 @@ fun SignUpScreen(
 
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    emailError = ""
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -194,15 +279,26 @@ fun SignUpScreen(
                         color = colors.onBackground.copy(alpha = 0.5f)
                     )
                 },
+                isError = emailError.isNotEmpty(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 shape = RoundedCornerShape(16.dp),
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = colors.surface,
                     focusedContainerColor = colors.surface,
                     unfocusedIndicatorColor = colors.outline.copy(alpha = 0.5f),
-                    focusedIndicatorColor = colors.primary
+                    focusedIndicatorColor = colors.primary,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error
                 )
             )
+
+            if (emailError.isNotEmpty()) {
+                Text(
+                    text = emailError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -218,7 +314,10 @@ fun SignUpScreen(
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    passwordError = ""
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -226,6 +325,7 @@ fun SignUpScreen(
                         color = colors.onBackground.copy(alpha = 0.5f)
                     )
                 },
+                isError = passwordError.isNotEmpty(),
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
@@ -242,9 +342,19 @@ fun SignUpScreen(
                     unfocusedContainerColor = colors.surface,
                     focusedContainerColor = colors.surface,
                     unfocusedIndicatorColor = colors.outline.copy(alpha = 0.5f),
-                    focusedIndicatorColor = colors.primary
+                    focusedIndicatorColor = colors.primary,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error
                 )
             )
+
+            if (passwordError.isNotEmpty()) {
+                Text(
+                    text = passwordError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -260,7 +370,10 @@ fun SignUpScreen(
 
             OutlinedTextField(
                 value = confirmPassword,
-                onValueChange = { confirmPassword = it },
+                onValueChange = {
+                    confirmPassword = it
+                    confirmPasswordError = ""
+                },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
@@ -268,6 +381,7 @@ fun SignUpScreen(
                         color = colors.onBackground.copy(alpha = 0.5f)
                     )
                 },
+                isError = confirmPasswordError.isNotEmpty(),
                 visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
@@ -284,9 +398,19 @@ fun SignUpScreen(
                     unfocusedContainerColor = colors.surface,
                     focusedContainerColor = colors.surface,
                     unfocusedIndicatorColor = colors.outline.copy(alpha = 0.5f),
-                    focusedIndicatorColor = colors.primary
+                    focusedIndicatorColor = colors.primary,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error
                 )
             )
+
+            if (confirmPasswordError.isNotEmpty()) {
+                Text(
+                    text = confirmPasswordError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -325,26 +449,142 @@ fun SignUpScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sign in link
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Already have an account? ",
+                    fontSize = 14.sp,
+                    color = colors.onBackground.copy(alpha = 0.7f),
+                    fontWeight = FontWeight.Normal
+                )
+                Text(
+                    text = "Sign in",
+                    fontSize = 14.sp,
+                    color = colors.primary,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.clickable(
+                        onClick = onSignInClick,
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Continue Button
             Button(
-                onClick = onContinueClick,
+                onClick = {
+                    // Validate form
+                    if (validateSignUpForm(
+                            fullName,
+                            email,
+                            phone,
+                            password,
+                            confirmPassword,
+                            isChecked
+                        )
+                    ) {
+                        // Call actual API registration
+                        authViewModel.register(fullName, email, phone, password)
+                    } else {
+                        // Show validation errors
+                        if (fullName.isEmpty()) fullNameError = "Full name is required"
+                        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                                .matches()
+                        ) {
+                            emailError = "Please enter a valid email"
+                        }
+                        if (phone.isEmpty()) phoneError = "Phone number is required"
+                        if (password.isEmpty() || password.length < 6) {
+                            passwordError = "Password must be at least 6 characters"
+                        }
+                        if (confirmPassword != password) {
+                            confirmPasswordError = "Passwords do not match"
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
+                enabled = !isLoading,
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colors.primary,
                     contentColor = colors.onPrimary
                 )
             ) {
-                Text(
-                    text = "Continue",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = colors.onPrimary,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        text = "Continue",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
     }
+}
+
+private fun validateSignUpForm(
+    fullName: String,
+    email: String,
+    phone: String,
+    password: String,
+    confirmPassword: String,
+    isChecked: Boolean
+): Boolean {
+    var isValid = true
+
+    if (fullName.isEmpty()) {
+        // Set full name error
+        isValid = false
+    }
+
+    if (email.isEmpty()) {
+        // Set email error
+        isValid = false
+    } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        // Set email format error
+        isValid = false
+    }
+
+    if (phone.isEmpty()) {
+        // Set phone error
+        isValid = false
+    }
+
+    if (password.isEmpty()) {
+        // Set password error
+        isValid = false
+    } else if (password.length < 6) {
+        // Set password length error
+        isValid = false
+    }
+
+    if (confirmPassword.isEmpty()) {
+        // Set confirm password error
+        isValid = false
+    } else if (password != confirmPassword) {
+        // Set password mismatch error
+        isValid = false
+    }
+
+    if (!isChecked) {
+        // Show agreement error
+        isValid = false
+    }
+
+    return isValid
 }

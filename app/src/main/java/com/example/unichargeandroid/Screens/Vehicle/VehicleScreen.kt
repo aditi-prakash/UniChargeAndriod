@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,18 +17,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
+import com.example.unichargeandroid.data.model.AuthState
+import com.example.unichargeandroid.viewmodels.AuthViewModel
 
 
 @Composable
 fun VehicleScreen(
     navController : NavController,
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
+    val authState by authViewModel.authState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Unauthenticated -> {
+                navController.navigate(Routes.OnBoardingScreen1) {
+                    popUpTo(Routes.AccountScreen) { inclusive = true }
+                }
+            }
+            else -> Unit
+        }
+    }
 
     Scaffold(
         floatingActionButton = {

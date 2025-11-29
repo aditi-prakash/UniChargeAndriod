@@ -1,5 +1,7 @@
 package com.example.unichargeandroid.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class WalletData(
     val balance: Double = 400.50,
     val loyaltyPoints: Int = 350,
@@ -7,18 +9,18 @@ data class WalletData(
 )
 
 data class PaymentMethod(
-    val id: String,
-    val type: String, // "upi" or "card"
-    val upiId: String? = null,
-    val card: CardDetails? = null,
-    val isDefault: Boolean = false
+    @SerializedName("_id") val id: String,
+    @SerializedName("type") val type: String,
+    @SerializedName("upiId") val upiId: String? = null,
+    @SerializedName("card") val card: CardDetails? = null,
+    @SerializedName("isDefault") val isDefault: Boolean = false
 )
 
 data class CardDetails(
-    val cardNumberMasked: String,
-    val cardHolder: String,
-    val expiryMonth: String,
-    val expiryYear: String
+    @SerializedName("cardNumberMasked") val cardNumberMasked: String,
+    @SerializedName("cardHolder") val cardHolder: String,
+    @SerializedName("expiryMonth") val expiryMonth: String,
+    @SerializedName("expiryYear") val expiryYear: String
 )
 
 // Form Data class

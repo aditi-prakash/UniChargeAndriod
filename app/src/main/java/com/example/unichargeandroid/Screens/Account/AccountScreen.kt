@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +30,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.unichargeandroid.R
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
 import com.example.unichargeandroid.Screens.Components.LogoutCard
+import com.example.unichargeandroid.data.model.AuthState
+import com.example.unichargeandroid.viewmodels.AuthViewModel
 
 @Composable
-fun AccountScreen(navController: NavController) {
+fun AccountScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel()
+) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
     // State to control the logout dialog visibility
     var showLogoutDialog by remember { mutableStateOf(false) }
+    val authState by authViewModel.authState.collectAsStateWithLifecycle()
+    val currentUser by authViewModel.currentUser.collectAsState()
+
+    // Handle authentication state changes
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Unauthenticated -> {
+                // Redirect to onboarding if not authenticated
+                navController.navigate(Routes.OnBoardingScreen1) {
+                    popUpTo(Routes.AccountScreen) { inclusive = true }
+                }
+            }
+            else -> Unit
+        }
+    }
 
     Scaffold(
         bottomBar = { BottomNavBar(navController, Routes.AccountScreen) }
@@ -94,18 +118,20 @@ fun AccountScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column {
-                            Text(
-                                "Andrew Ainsley",
-                                fontSize = 18.sp,
-                                fontWeight = typography.titleMedium.fontWeight,
-                                color = colors.onBackground
-                            )
-                            Text(
-                                "+1 111 467 378 399",
-                                color = colors.onSurfaceVariant,
-                                fontSize = 14.sp
-                            )
+                        currentUser?.let { user ->
+                            Column {
+                                Text(
+                                    user.fullName,
+                                    fontSize = 18.sp,
+                                    fontWeight = typography.titleMedium.fontWeight,
+                                    color = colors.onBackground
+                                )
+                                Text(
+                                    user.phoneNumber,
+                                    color = colors.onSurfaceVariant,
+                                    fontSize = 14.sp
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.weight(1f))
@@ -129,7 +155,9 @@ fun AccountScreen(navController: NavController) {
                     onClick = { navController.navigate(Routes.HistoryScreen) }
                 )
                 AccountItem(
-                    iconRes = R.drawable.payment_methods, title = "Payment Methods", null,
+                    iconRes = R.drawable.payment_methods,
+                    title = "Payment Methods",
+                    null,
                     onClick = { navController.navigate(Routes.PaymentMethodsScreen) }
                 )
 
@@ -157,7 +185,10 @@ fun AccountScreen(navController: NavController) {
                     onClick = { navController.navigate(Routes.ThemeScreen) }
                 )
 
-                HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
+                HorizontalDivider(
+                    Modifier.padding(vertical = 12.dp),
+                    color = colors.outlineVariant
+                )
 
                 AccountItem(
                     iconRes = R.drawable.help,
@@ -178,7 +209,10 @@ fun AccountScreen(navController: NavController) {
                     onClick = { navController.navigate(Routes.AboutScreen) }
                 )
 
-                HorizontalDivider(Modifier.padding(vertical = 12.dp), color = colors.outlineVariant)
+                HorizontalDivider(
+                    Modifier.padding(vertical = 12.dp),
+                    color = colors.outlineVariant
+                )
 
                 Row(
                     modifier = Modifier
@@ -217,12 +251,10 @@ fun AccountScreen(navController: NavController) {
         ) {
             LogoutCard(
                 onConfirmLogout = {
-                    // Handle logout logic here
-                    // For example: clear user session, navigate to login screen, etc.
+                    // Handle logout logic using AuthViewModel
+                    authViewModel.logout()
                     showLogoutDialog = false
-                    navController.navigate(Routes.LoginScreen) {
-                        popUpTo(Routes.AccountScreen) { inclusive = true }
-                    }
+                    // Navigation will be handled automatically by the AuthState change in LaunchedEffect
                 },
                 onCancel = { showLogoutDialog = false }
             )

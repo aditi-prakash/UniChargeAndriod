@@ -22,56 +22,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.unichargeandroid.Routes
 import com.example.unichargeandroid.Screens.Components.BottomNavBar
+import com.example.unichargeandroid.data.model.AuthState
 import com.example.unichargeandroid.data.model.CardDetails
 import com.example.unichargeandroid.data.model.PaymentMethod
+import com.example.unichargeandroid.data.model.User
+import com.example.unichargeandroid.data.model.Wallet
 import com.example.unichargeandroid.data.model.WalletData
+import com.example.unichargeandroid.viewmodels.AuthViewModel
 
 @Composable
-fun WalletScreen(navController: NavController) {
-    var wallet by remember { mutableStateOf(WalletData()) }
-    var paymentMethods by remember { mutableStateOf<List<PaymentMethod>>(emptyList()) }
+fun WalletScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel()
+) {
     var showModal by remember { mutableStateOf(false) }
     var amount by remember { mutableStateOf("") }
     var selectedMethod by remember { mutableStateOf("") }
     var showOtherOption by remember { mutableStateOf(false) }
     var otherPaymentType by remember { mutableStateOf("") }
 
-    // Sample payment methods
-    val samplePaymentMethods = listOf(
-        PaymentMethod(
-            id = "1",
-            type = "upi",
-            upiId = "andrew@oksbi",
-            isDefault = true
-        ),
-        PaymentMethod(
-            id = "2",
-            type = "card",
-            card = CardDetails(
-                cardNumberMasked = "1234",
-                cardHolder = "Andrew Ainsley",
-                expiryMonth = "12",
-                expiryYear = "25"
-            ),
-            isDefault = false
-        )
-    )
+    val authState by authViewModel.authState.collectAsStateWithLifecycle()
+    val currentUser by authViewModel.currentUser.collectAsState()
 
-    LaunchedEffect(Unit) {
-        // Simulate API call to fetch wallet data
-        paymentMethods = samplePaymentMethods
-        wallet = wallet.copy(defaultPaymentMethod = samplePaymentMethods.firstOrNull()?.id)
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Unauthenticated -> {
+                navController.navigate(Routes.OnBoardingScreen1) {
+                    popUpTo(Routes.AccountScreen) { inclusive = true }
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    // Initialize selected method with user's default payment method
+    LaunchedEffect(currentUser) {
+        currentUser?.wallet?.defaultPaymentMethod?.let { defaultId ->
+            selectedMethod = defaultId
+        }
     }
 
     val scrollState = rememberScrollState()
     val minBalance = 500.0
-    val isLowBalance = wallet.balance < minBalance
+    val isLowBalance = (currentUser?.wallet?.balance ?: 0.0) < minBalance
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -148,7 +150,7 @@ fun WalletScreen(navController: NavController) {
                     ) {
                         Column {
                             Text(
-                                text = "Andrew Ainsley",
+                                text = currentUser?.fullName ?: "User",
                                 fontSize = 16.sp,
                                 color = Color.White,
                                 fontWeight = FontWeight.Medium
@@ -181,7 +183,7 @@ fun WalletScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "₹${wallet.balance}",
+                            text = "₹${currentUser?.wallet?.balance ?: 0.0}",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -218,7 +220,7 @@ fun WalletScreen(navController: NavController) {
                 WalletInfoItem(
                     icon = Icons.Default.AccountBalanceWallet,
                     title = "Balance",
-                    value = "₹${wallet.balance}",
+                    value = "₹${currentUser?.wallet?.balance ?: 0.0}",
                     isWarning = isLowBalance
                 )
 
@@ -254,8 +256,8 @@ fun WalletScreen(navController: NavController) {
                 WalletInfoItem(
                     icon = Icons.Default.CardGiftcard,
                     title = "Loyalty Points",
-                    value = "${wallet.loyaltyPoints}",
-                    subtitle = getLoyaltyLevel(wallet.loyaltyPoints)
+                    value = "${currentUser?.wallet?.loyaltyPoints ?: 0}",
+                    subtitle = getLoyaltyLevel(currentUser?.wallet?.loyaltyPoints ?: 0)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -264,7 +266,7 @@ fun WalletScreen(navController: NavController) {
                 WalletInfoItem(
                     icon = Icons.Default.CreditCard,
                     title = "Default",
-                    value = getDefaultPaymentDisplay(wallet, paymentMethods)
+                    value = getDefaultPaymentDisplay(currentUser)
                 )
             }
 
@@ -296,13 +298,32 @@ fun WalletScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            paymentMethods.forEach { method ->
+            // Display user's actual payment methods
+            currentUser?.paymentMethods?.forEach { method ->
                 PaymentMethodItem(
                     method = method,
                     selected = selectedMethod == method.id,
-                    onSelect = { selectedMethod = method.id }
+                    onSelect = { selectedMethod = method.id },
+                    isDefault = method.id == currentUser?.wallet?.defaultPaymentMethod
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            // Show message if no payment methods
+            if (currentUser?.paymentMethods.isNullOrEmpty()) {
+                Text(
+                    text = "No payment methods added",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant,
+                            RoundedCornerShape(12.dp)
+                        )
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -316,8 +337,8 @@ fun WalletScreen(navController: NavController) {
             onAmountChange = { amount = it },
             selectedMethod = selectedMethod,
             onSelectedMethodChange = { selectedMethod = it },
-            paymentMethods = paymentMethods,
-            wallet = wallet,
+            paymentMethods = currentUser?.paymentMethods ?: emptyList(),
+            wallet = currentUser?.wallet,
             showOtherOption = showOtherOption,
             onShowOtherOptionChange = { showOtherOption = it },
             otherPaymentType = otherPaymentType,
@@ -326,11 +347,11 @@ fun WalletScreen(navController: NavController) {
                 showModal = false
                 showOtherOption = false
                 amount = ""
-                selectedMethod = wallet.defaultPaymentMethod ?: ""
+                selectedMethod = currentUser?.wallet?.defaultPaymentMethod ?: ""
                 otherPaymentType = ""
             },
             onProceed = {
-                // Handle payment processing
+                // Handle payment processing with actual user data
                 // This would integrate with your payment gateway
                 showModal = false
             }
@@ -388,17 +409,19 @@ fun WalletInfoItem(
 fun PaymentMethodItem(
     method: PaymentMethod,
     selected: Boolean,
-    onSelect: () -> Unit
+    onSelect: () -> Unit,
+    isDefault: Boolean
 ) {
     val displayText = when (method.type) {
-        "upi" -> "UPI: ${method.upiId}"
+        "upi" -> "UPI: ${method.upiId ?: "N/A"}"
         "card" -> "Card: **** ${method.card?.cardNumberMasked ?: "XXXX"}"
-        else -> method.type
+        else -> method.type.replaceFirstChar { it.uppercase() }
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onSelect)
             .background(
                 if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
                 else MaterialTheme.colorScheme.surface,
@@ -416,11 +439,11 @@ fun PaymentMethodItem(
             text = displayText,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
         )
 
-        if (method.id == getDefaultPaymentMethodId()) {
-            Spacer(modifier = Modifier.weight(1f))
+        if (isDefault) {
             Text(
                 text = "Default",
                 fontSize = 12.sp,
@@ -444,7 +467,7 @@ fun AddBalanceModal(
     selectedMethod: String,
     onSelectedMethodChange: (String) -> Unit,
     paymentMethods: List<PaymentMethod>,
-    wallet: WalletData,
+    wallet: Wallet?,
     showOtherOption: Boolean,
     onShowOtherOptionChange: (Boolean) -> Unit,
     otherPaymentType: String,
@@ -495,12 +518,13 @@ fun AddBalanceModal(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    // Show user's actual payment methods
                     paymentMethods.forEach { method ->
                         val displayText = when (method.type) {
-                            "upi" -> "UPI: ${method.upiId}"
+                            "upi" -> "UPI: ${method.upiId ?: "N/A"}"
                             "card" -> "Card: **** ${method.card?.cardNumberMasked ?: "XXXX"}"
-                            else -> method.type
-                        } + if (method.id == wallet.defaultPaymentMethod) " (Default)" else ""
+                            else -> method.type.replaceFirstChar { it.uppercase() }
+                        } + if (method.id == wallet?.defaultPaymentMethod) " (Default)" else ""
 
                         Row(
                             modifier = Modifier
@@ -533,49 +557,68 @@ fun AddBalanceModal(
                         }
                     }
 
-                    // Other Payment Option
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onSelectedMethodChange("other") }
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                    // Show "Other Payment Option" only if user has payment methods
+                    if (paymentMethods.isNotEmpty()) {
+                        // Other Payment Option
+                        Row(
                             modifier = Modifier
-                                .size(20.dp)
-                                .border(
-                                    2.dp,
-                                    if (selectedMethod == "other") MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.outlineVariant,
-                                    CircleShape
-                                )
-                                .background(
-                                    if (selectedMethod == "other") MaterialTheme.colorScheme.primary
-                                    else Color.Transparent,
-                                    CircleShape
-                                )
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = "Other Payment Method",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-
-                    if (selectedMethod == "other") {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(
-                            onClick = { onShowOtherOptionChange(true) },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                contentColor = MaterialTheme.colorScheme.primary
-                            )
+                                .fillMaxWidth()
+                                .clickable { onSelectedMethodChange("other") }
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Add New Payment Method")
+                            Box(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .border(
+                                        2.dp,
+                                        if (selectedMethod == "other") MaterialTheme.colorScheme.primary
+                                        else MaterialTheme.colorScheme.outlineVariant,
+                                        CircleShape
+                                    )
+                                    .background(
+                                        if (selectedMethod == "other") MaterialTheme.colorScheme.primary
+                                        else Color.Transparent,
+                                        CircleShape
+                                    )
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Other Payment Method",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
+
+                        if (selectedMethod == "other") {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(
+                                onClick = { onShowOtherOptionChange(true) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    contentColor = MaterialTheme.colorScheme.primary
+                                )
+                            ) {
+                                Text("Add New Payment Method")
+                            }
+                        }
+                    } else {
+                        // If no payment methods, show message
+                        Text(
+                            text = "No saved payment methods. Please add a payment method first.",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceVariant,
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .padding(16.dp),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 } else {
                     // Other Payment Options
@@ -680,7 +723,7 @@ fun AddBalanceModal(
                         ),
                         enabled = amount.isNotBlank() && (
                                 if (showOtherOption) otherPaymentType.isNotBlank()
-                                else selectedMethod.isNotBlank()
+                                else selectedMethod.isNotBlank() || paymentMethods.isEmpty()
                                 )
                     ) {
                         Text(if (showOtherOption) "Proceed with Other Payment" else "Proceed to Pay")
@@ -701,21 +744,16 @@ private fun getLoyaltyLevel(points: Int): String {
     }
 }
 
-private fun getDefaultPaymentDisplay(
-    wallet: WalletData,
-    paymentMethods: List<PaymentMethod>
-): String {
-    val defaultMethod = paymentMethods.find { it.id == wallet.defaultPaymentMethod }
+private fun getDefaultPaymentDisplay(user: User?): String {
+    val wallet = user?.wallet
+    val paymentMethods = user?.paymentMethods ?: emptyList()
+
+    val defaultMethod = paymentMethods.find { it.id == wallet?.defaultPaymentMethod }
     return defaultMethod?.let { method ->
         when (method.type) {
-            "upi" -> "UPI: ${method.upiId}"
+            "upi" -> "UPI: ${method.upiId ?: "N/A"}"
             "card" -> "Card: **** ${method.card?.cardNumberMasked ?: "XXXX"}"
-            else -> method.type
+            else -> method.type.replaceFirstChar { it.uppercase() }
         }
     } ?: "None"
-}
-
-private fun getDefaultPaymentMethodId(): String {
-    // This would come from your actual data source
-    return "1"
 }

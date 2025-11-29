@@ -25,7 +25,7 @@ import com.example.unichargeandroid.R
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun LoginScreen(
+fun AuthScreen(
     onSignInWithEmail: () -> Unit = {},
     onSignUp: () -> Unit = {},
     onGoogleSignIn: () -> Unit = {}
