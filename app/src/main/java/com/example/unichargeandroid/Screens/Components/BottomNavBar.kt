@@ -103,9 +103,9 @@ fun BottomMenuIcon(
                 navController.navigate(route) {
                     launchSingleTop = true
                     restoreState = true
-//                    popUpTo(navController.graph.startDestinationId) {
-//                        saveState = true
-//                    }
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
                 }
             }
             .width(70.dp),
